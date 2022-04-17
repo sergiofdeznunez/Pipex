@@ -12,15 +12,23 @@
 
 #include "pipex.h"
 
+void	first_child()
+{}
+
+void	second_child()
+{}
+
 int	main(int argc, char **argv)
 {
 	int		end[2];
-	int		fd1;
-	int		fd2;
-	pid_t	parent;
-	pid_t	child1;
-	pid_t	child2;
+	int		dest;
+	int		pid;
+	int		status;
 
-	pipe(end);
+	if (argc == 5)
+	{
+		pipe(end);
+		pid = catch_error(fork());
+	}
 
 }

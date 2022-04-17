@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: snunez <snunez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/11 12:27:25 by snunez            #+#    #+#             */
-/*   Updated: 2022/04/11 12:46:54 by snunez           ###   ########.fr       */
+/*   Created: 2022/04/11 12:27:19 by snunez            #+#    #+#             */
+/*   Updated: 2022/04/11 14:13:52 by snunez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-#ifndef READ_END
-# define READ_END 0
-#endif
-#ifndef WRITE_END
-# define WRITE_END 1
-#endif
-#ifndef FILE_NAME
-# define FILE_NAME "file.txt"
-#endif
-# include <stdarg.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-
-int	catch_error(int error);
-
-#endif
+#include "pipex.h"
+//TODO: ADD THIS FT TO THE LIBFT
+int	catch_error(int error)
+{
+	if (error == -1)
+	{
+		perror("Error");
+		exit(EXIT_FAILURE);
+	}
+	return (0);
+}
