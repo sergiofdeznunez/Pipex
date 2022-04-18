@@ -6,7 +6,7 @@
 /*   By: snunez <snunez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 12:27:25 by snunez            #+#    #+#             */
-/*   Updated: 2022/04/11 12:46:54 by snunez           ###   ########.fr       */
+/*   Updated: 2022/04/18 12:34:21 by snunez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@
 # include <stdio.h>
 # include <fcntl.h>
 
-int	catch_error(int error);
-
+int		catch_error(int error);
+void	catch_verror(int error);
 #endif
