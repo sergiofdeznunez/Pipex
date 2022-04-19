@@ -2,7 +2,7 @@ CC = gcc
 
 CFLAGS = -Wall -Werror -Wextra #-g3 -fsanitize=address
 
-SRCS = pipex.c
+SRCS = pipex.c aux.c
 
 OBJS = ${SRCS:.c=.o}
 
