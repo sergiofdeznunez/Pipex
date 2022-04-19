@@ -29,4 +29,5 @@
 
 int		catch_error(int error);
 void	catch_verror(int error);
+int	    check_cmds(char **cmd1, char **cmd2);
 #endif

@@ -28,11 +28,11 @@ char	**take_cmd(char *line)
 	return (cmd);
 }
 
-void	execute(char **cmd/*, **envp??)*/)
+void	execute(char **cmd, char **envp)
 {
 }
 
-int	main(int argc, char **argv/*, **envp??*/)
+int	main(int argc, char **argv, char **envp)
 {
 	int		pipes[2];
 	int		infile, dest, status;
@@ -45,16 +45,16 @@ int	main(int argc, char **argv/*, **envp??*/)
 		pipe(pipes);
 		cmd1 = take_cmd(argv[2]);
 		cmd2 = take_cmd(argv[4]);
-		if (cmd1 == NULL || cmd2 == NULL)
-			return (printf("Error: command input\n"));
+		catch_verror(check_cmds(cmd1, cmd2));
 		pid = catch_error(fork());
 		if (pid == 0) /* hijo 1*/
 		{
-			infile = open(argv[1], O_RDONLY); /*manage error*/
+			infile = open(argv[1], O_RDONLY);
+			catch_verror(infile);
 			catch_verror(close(pipes[READ_END]));
 			catch_verror(dup2(infile, STDIN_FILENO));
 			catch_verror(dup2(pipes[WRITE_END], STDOUT_FILENO));
-			execute(cmd1);
+			execute(cmd1, envp);
 			catch_verror(close(pipes[WRITE_END]));
 			catch_verror(close(infile));
 			free(cmd1);
@@ -64,10 +64,11 @@ int	main(int argc, char **argv/*, **envp??*/)
 			pid = catch_error(fork());
 			if (pid == 0) /* hijo 2 */
 			{
-				dest = open(FILE_NAME, O_WRONLY); /* manage error*/
+				dest = open(FILE_NAME, O_WRONLY);
+				catch_verror(dest);
 				catch_verror(dup2(pipes[READ_END], STDIN_FILENO));
 				catch_verror(dup2(dest, STDOUT_FILENO));
-				execute(cmd2);
+				execute(cmd2, envp);
 				catch_verror(close(pipes[READ_END]));
 				catch_verror(close(dest));
 				free(cmd2);
