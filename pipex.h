@@ -26,8 +26,11 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include <sys/wait.h>
+# include "./Libft-Mia-/libft.h"
 
 int		catch_error(int error);
 void	catch_verror(int error);
-int	    check_cmds(char **cmd1, char **cmd2);
+int		check_cmds(char **cmd1, char **cmd2);
+char	**get_routes(char **cmd, char **envp);
 #endif

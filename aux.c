@@ -42,3 +42,32 @@ int	check_cmds(char **cmd1, char **cmd2)
 	}
 	return (0);
 }
+
+char	**get_routes(char **cmd, char **envp)
+{
+	char	**routes;
+	char	**aux;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	while(envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+		{
+			aux = ft_split(envp[i], '=');
+			routes = ft_split(aux[1], ':');
+		}
+		i++;
+	}
+	free(aux);
+	i = 0;
+	while (routes[i])
+	{
+		tmp = ft_strjoin(routes[i], "/");
+		routes[i] = ft_strjoin(tmp, cmd[0]);
+		free(tmp);
+		i++;
+	}
+	return (routes);
+}

@@ -8,7 +8,7 @@ OBJS = ${SRCS:.c=.o}
 
 NAME = pipex
 
-LIBFT_PATH = Libft/
+LIBFT_PATH = Libft-Mia-/
 
 LIBFT = -L$(LIBFT_PATH) $(LIBFT_PATH)libft.a
 

@@ -24,12 +24,29 @@ char	**take_cmd(char *line)
 
 	if(!line)
 		return (NULL);
-	cmd = ft_strsplit(line, ' ');
+	cmd = ft_split(line, ' ');
 	return (cmd);
 }
 
 void	execute(char **cmd, char **envp)
 {
+	char **routes;
+	int i;
+
+	i = 0;
+	if (execve(cmd[0], cmd, envp) == -1)
+	{
+		routes = get_routes(cmd, envp);
+		while (routes[i])
+		{
+			execve(routes[i], cmd, envp);
+			i++;
+		}
+		ft_free_double_pointer((void **)routes);
+		ft_free_double_pointer((void **)cmd);
+		perror("Error: command not found\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -57,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 			execute(cmd1, envp);
 			catch_verror(close(pipes[WRITE_END]));
 			catch_verror(close(infile));
-			free(cmd1);
+			ft_free_double_pointer((void **)cmd1);
 		}
 		else
 		{
@@ -71,7 +88,7 @@ int	main(int argc, char **argv, char **envp)
 				execute(cmd2, envp);
 				catch_verror(close(pipes[READ_END]));
 				catch_verror(close(dest));
-				free(cmd2);
+				ft_free_double_pointer((void **)cmd2);
 			}
 
 		}
