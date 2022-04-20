@@ -66,23 +66,28 @@ int	main(int argc, char **argv, char **envp)
 		pid = catch_error(fork());
 		if (pid == 0) /* hijo 1*/
 		{
-			infile = open(argv[1], O_RDONLY);
-			catch_verror(infile);
-			catch_verror(close(pipes[READ_END]));
-			catch_verror(dup2(infile, STDIN_FILENO));
-			catch_verror(dup2(pipes[WRITE_END], STDOUT_FILENO));
-			execute(cmd1, envp);
-			catch_verror(close(pipes[WRITE_END]));
-			catch_verror(close(infile));
-			ft_free_double_pointer((void **)cmd1);
+			if (access(argv[1], R_OK))
+			{
+				infile = open(argv[1], O_RDONLY);
+				catch_oerror(cmd1, cmd2, infile);
+				catch_verror(close(pipes[READ_END]));
+				catch_verror(dup2(infile, STDIN_FILENO));
+				catch_verror(dup2(pipes[WRITE_END], STDOUT_FILENO));
+				execute(cmd1, envp);
+				catch_verror(close(pipes[WRITE_END]));
+				catch_verror(close(infile));
+				ft_free_double_pointer((void **)cmd1);
+			}
+			else
+				perror("Error: invalid <file1>");
 		}
 		else
 		{
 			pid = catch_error(fork());
 			if (pid == 0) /* hijo 2 */
 			{
-				dest = open(FILE_NAME, O_WRONLY);
-				catch_verror(dest);
+				dest = open(FILE_NAME, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				catch_oerror(cmd1, cmd2, dest);
 				catch_verror(dup2(pipes[READ_END], STDIN_FILENO));
 				catch_verror(dup2(dest, STDOUT_FILENO));
 				execute(cmd2, envp);
@@ -90,7 +95,6 @@ int	main(int argc, char **argv, char **envp)
 				catch_verror(close(dest));
 				ft_free_double_pointer((void **)cmd2);
 			}
-
 		}
 		wait(&status);
 		wait(&status);

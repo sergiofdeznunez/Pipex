@@ -31,6 +31,7 @@
 
 int		catch_error(int error);
 void	catch_verror(int error);
+void	catch_oerror(char **cmd1, char **cmd2, int error);
 int		check_cmds(char **cmd1, char **cmd2);
 char	**get_routes(char **cmd, char **envp);
 #endif

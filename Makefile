@@ -29,4 +29,10 @@ fclean:	clean
 
 re:	fclean all
 
+test:
+		bash test.sh
+
+clean_test:
+		rm -rf tt_*
+
 .PHONY = all clean fclean re
