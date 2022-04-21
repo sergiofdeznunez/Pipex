@@ -6,7 +6,7 @@
 /*   By: snunez <snunez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 12:27:19 by snunez            #+#    #+#             */
-/*   Updated: 2022/04/18 13:51:43 by snunez           ###   ########.fr       */
+/*   Updated: 2022/04/21 11:50:11 by snunez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**take_cmd(char *line)
 {
 	char	**cmd;
 
-	if(!line)
+	if (!line)
 		return (NULL);
 	cmd = ft_split(line, ' ');
 	return (cmd);
