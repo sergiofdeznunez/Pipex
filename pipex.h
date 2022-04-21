@@ -18,9 +18,6 @@
 #ifndef WRITE_END
 # define WRITE_END 1
 #endif
-#ifndef FILE_NAME
-# define FILE_NAME "file.txt"
-#endif
 # include <stdarg.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -29,8 +26,6 @@
 # include <sys/wait.h>
 # include "./Libft-Mia-/libft.h"
 
-int		catch_error(int error);
-void	catch_verror(int error);
 void	catch_oerror(char **cmd1, char **cmd2, int error);
 int		check_cmds(char **cmd1, char **cmd2);
 char	**get_routes(char **cmd, char **envp);

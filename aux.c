@@ -11,25 +11,6 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-//TODO: ADD THIS FT TO THE LIBFT
-int	catch_error(int error)
-{
-	if (error == -1)
-	{
-		perror("Error.");
-		exit(EXIT_FAILURE);
-	}
-	return (0);
-}
-//TODO: ADD THIS FT TO THE LIBFT
-void	catch_verror(int error)
-{
-	if (error == -1)
-	{
-		perror("Error.");
-		exit(EXIT_FAILURE);
-	}
-}
 
 void	catch_oerror(char **cmd1, char **cmd2, int error)
 {
