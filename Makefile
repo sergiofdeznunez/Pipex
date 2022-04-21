@@ -25,6 +25,7 @@ clean:
 		rm -f $(OBJS)
 
 fclean:	clean
+		make fclean -sC $(LIBFT_PATH)
 		rm -f $(NAME)
 
 re:	fclean all
