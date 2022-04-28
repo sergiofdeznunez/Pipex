@@ -18,7 +18,7 @@ void	catch_oerror(char **cmd1, char **cmd2, int error)
 	{
 		ft_free_double_pointer((void **)cmd1);
 		ft_free_double_pointer((void **)cmd2);
-		perror("Error: No such file or directory");
+		perror("Error:");
 		exit(EXIT_FAILURE);
 	}
 }

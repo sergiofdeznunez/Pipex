@@ -52,7 +52,7 @@ void	execute(char **cmd, char **envp)
 		}
 		ft_free_double_pointer((void **)routes);
 		ft_free_double_pointer((void **)cmd);
-		perror("Error: command not found\n");
+		perror("Error: command not found");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -74,53 +74,61 @@ int	main(int argc, char **argv, char **envp)
 		printf("me separo\n");
 		pid = catch_error(fork());
 		printf("pid = %d\n", pid);
-		if (pid == 0) /* hijo 1*/
+		if (!pid) /* hijo 1*/
 		{
 			printf("entro hijo 1\n");
-			printf("access = %d\n", access(argv[1], R_OK));
+			catch_verror(close(pipes[READ_END]));
 			if (access(argv[1], R_OK) == 0)
 			{
 				printf("entro al if hijo1\n");
 				infile = open(argv[1], O_RDONLY);
 				catch_oerror(cmd1, cmd2, infile);
-				printf("abro archivo infile\n");
-				catch_verror(close(pipes[READ_END]));
-				printf("cierro READ_END\n");
-				catch_verror(dup2(STDIN_FILENO, infile));
-				printf("infile = stdin\n");
-				catch_verror(dup2(STDOUT_FILENO, pipes[WRITE_END]));
-				printf("WRITE_END = stdout\n");
-				printf("seteo pipes\n");
-				execute(cmd1, envp);
-				printf("ejecuto cmd1\n");
-				catch_verror(close(pipes[WRITE_END]));
+				catch_verror(dup2(infile, STDIN_FILENO));
 				catch_verror(close(infile));
-				printf("cierro pipes\n");
-				ft_free_double_pointer((void **)cmd1);
-				printf("salgo hijo 1\n");
+				printf("seteo stdin = infile\n");
+				catch_verror(dup2(pipes[WRITE_END], STDOUT_FILENO));
+				printf("seteo stdout = pipes[WRITE_END]\n");
+				catch_verror(close(pipes[WRITE_END]));
+				printf("seteo stdout = pipes[WRITE_END]\n");
+				printf("entro al exec\n");
+				execute(cmd1, envp);
 			}
 			else
-				perror("Error: invalid <file1>");
+			{
+				printf("Error: invalid <file1>. ");
+				catch_verror(-1);//¿¿catch_oerr??
+			}
 		}
 		else
 		{
 			printf("entro padre\n");
-			waitpid(pid, &status, 0);
+			//waitpid(-1, &status, 0);
+			catch_verror(close(pipes[WRITE_END]));
 			pid = catch_error(fork());
 			if (pid == 0) /* hijo 2 */
 			{
 				printf("entro hijo 2\n");
+				//catch_verror(close(pipes[WRITE_END]));
 				dest = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				catch_oerror(cmd1, cmd2, dest);
 				catch_verror(dup2(pipes[READ_END], STDIN_FILENO));
-				catch_verror(dup2(dest, STDOUT_FILENO));
-				execute(cmd2, envp);
 				catch_verror(close(pipes[READ_END]));
-				catch_verror(close(dest));
-				ft_free_double_pointer((void **)cmd2);
+				printf("seteo stdin = pipes[READ_END]\n");
+				catch_verror(dup2(dest, STDOUT_FILENO));
+				printf("seteo stdout = dest\n");
+				//catch_verror(close(dest));
+				execute(cmd2, envp);
+			}
+			else
+			{
+				catch_verror(close(pipes[READ_END]));
+				catch_verror(close(pipes[WRITE_END]));
 			}
 		}
 		waitpid(pid, &status, 0);
+		waitpid(pid, &status, 0);
+		ft_free_double_pointer((void **)cmd1);
+		ft_free_double_pointer((void **)cmd2);
 	}
 	else
 		printf("usage: ./pipex <file1> \"cmd1\" \"cmd2\" <file2>\n");
