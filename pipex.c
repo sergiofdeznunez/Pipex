@@ -35,14 +35,11 @@ void	execute(char **cmd, char **envp)
 	int j = 0;
 
 	i = 0;
-	printf("entro a execute\n");
 	if (execve(cmd[0], cmd, envp) == -1)
 	{
-		printf("entro a buscar rutas\n");
 		routes = get_routes(cmd, envp);
 		while (routes[j])
 		{
-			printf("ruta-> %s\n", routes[j]);
 			j++;
 		}
 		while (routes[i])
@@ -60,7 +57,9 @@ void	execute(char **cmd, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	int		pipes[2];
-	int		infile, dest, status;
+	int		infile;
+	int		dest;
+	int		status;
 	pid_t	pid;
 	char	**cmd1;
 	char	**cmd2;
@@ -71,26 +70,20 @@ int	main(int argc, char **argv, char **envp)
 		cmd1 = take_cmd(argv[2]);
 		cmd2 = take_cmd(argv[3]);
 		catch_verror(check_cmds(cmd1, cmd2));
-		printf("me separo\n");
 		pid = catch_error(fork());
-		printf("pid = %d\n", pid);
+		//printf("pid = %d\n", pid);
 		if (!pid) /* hijo 1*/
 		{
-			printf("entro hijo 1\n");
+			//printf("entro hijo 1\n");
 			catch_verror(close(pipes[READ_END]));
 			if (access(argv[1], R_OK) == 0)
 			{
-				printf("entro al if hijo1\n");
 				infile = open(argv[1], O_RDONLY);
 				catch_oerror(cmd1, cmd2, infile);
 				catch_verror(dup2(infile, STDIN_FILENO));
 				catch_verror(close(infile));
-				printf("seteo stdin = infile\n");
 				catch_verror(dup2(pipes[WRITE_END], STDOUT_FILENO));
-				printf("seteo stdout = pipes[WRITE_END]\n");
 				catch_verror(close(pipes[WRITE_END]));
-				printf("seteo stdout = pipes[WRITE_END]\n");
-				printf("entro al exec\n");
 				execute(cmd1, envp);
 			}
 			else
@@ -98,32 +91,22 @@ int	main(int argc, char **argv, char **envp)
 				printf("Error: invalid <file1>. ");
 				catch_verror(-1);//¿¿catch_oerr??
 			}
-		}
+		 }
 		else
 		{
-			printf("entro padre\n");
-			//waitpid(-1, &status, 0);
 			catch_verror(close(pipes[WRITE_END]));
 			pid = catch_error(fork());
 			if (pid == 0) /* hijo 2 */
 			{
-				printf("entro hijo 2\n");
-				//catch_verror(close(pipes[WRITE_END]));
 				dest = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				catch_oerror(cmd1, cmd2, dest);
 				catch_verror(dup2(pipes[READ_END], STDIN_FILENO));
 				catch_verror(close(pipes[READ_END]));
-				printf("seteo stdin = pipes[READ_END]\n");
 				catch_verror(dup2(dest, STDOUT_FILENO));
-				printf("seteo stdout = dest\n");
-				//catch_verror(close(dest));
 				execute(cmd2, envp);
 			}
 			else
-			{
 				catch_verror(close(pipes[READ_END]));
-				catch_verror(close(pipes[WRITE_END]));
-			}
 		}
 		waitpid(pid, &status, 0);
 		waitpid(pid, &status, 0);
