@@ -18,12 +18,22 @@ void	catch_oerror(char **cmd1, char **cmd2, int error)
 	{
 		ft_free_double_pointer((void **)cmd1);
 		ft_free_double_pointer((void **)cmd2);
-		perror("Error:");
+		perror("Error");
 		exit(EXIT_FAILURE);
 	}
 }
 
-int	check_cmds(char **cmd1, char **cmd2)
+char	**take_cmd(char *line)
+{
+	char	**cmd;
+
+	if (!line)
+		return (NULL);
+	cmd = ft_split(line, ' ');
+	return (cmd);
+}
+
+int		check_cmds(char **cmd1, char **cmd2)
 {
 	if (cmd1 == NULL || cmd2 == NULL)
 	{
