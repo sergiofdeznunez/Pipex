@@ -12,6 +12,11 @@
 
 #include "pipex.h"
 
+void leaks(void)
+{
+	system("leaks pipex");
+}
+
 void	execute(char **cmd, char **envp)
 {
 	char	**routes;
@@ -96,9 +101,9 @@ int	main(int argc, char **argv, char **envp)
 	if (argc == 5)
 	{
 		pipe(pipes);
-		printf("pipes = %p\n", &pipes);
+		//printf("pipes = %p\n", &pipes);
 		pid = catch_error(fork());
-		printf("pid = %d\n", pid);
+		//printf("pid = %d\n", pid);
 		if (!pid)
 		{
 			if (access(argv[1], R_OK) == 0)
@@ -111,8 +116,8 @@ int	main(int argc, char **argv, char **envp)
 		waitpid(pid, &status, 0);
 		waitpid(pid, &status, 0);
 		//exit(EXIT_SUCCESS);
-		system("leaks pipex");
 	}
 	else
 		printf("usage: ./pipex <file1> \"cmd1\" \"cmd2\" <file2>\n");
+	atexit(leaks);
 }

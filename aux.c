@@ -65,7 +65,7 @@ char	**get_routes(char **cmd, char **envp)
 	while (routes[i])
 	{
 		tmp = ft_strjoin(routes[i], "/");
-		free(routes[i]);
+		//free(routes[i]);
 		routes[i] = ft_strjoin(tmp, cmd[0]);
 		free(tmp);
 		i++;
