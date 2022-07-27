@@ -70,14 +70,12 @@ void	second_child(char **argv, int pipes[], char **envp)
 	char	**cmd2;
 
 	cmd2 = take_cmd(argv[3]);
-	printf("cmd2 = %p\n",  cmd2);
 	catch_verror(check_cmd(cmd2));
 	catch_verror(close(pipes[WRITE_END]));
 	pid = catch_error(fork());
 	if (pid == 0)
 	{
 		dest = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		printf("dest = %p\n", &dest);
 		catch_oerror(cmd2, dest);
 		catch_verror(dup2(pipes[READ_END], STDIN_FILENO));
 		catch_verror(close(pipes[READ_END]));
@@ -88,7 +86,6 @@ void	second_child(char **argv, int pipes[], char **envp)
 	{
 		ft_free_double_pointer((void **)cmd2);
 		catch_verror(close(pipes[READ_END]));
-		//system("leaks pipex");
 	}
 }
 
@@ -101,9 +98,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc == 5)
 	{
 		pipe(pipes);
-		//printf("pipes = %p\n", &pipes);
 		pid = catch_error(fork());
-		//printf("pid = %d\n", pid);
 		if (!pid)
 		{
 			if (access(argv[1], R_OK) == 0)
@@ -111,11 +106,8 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 			second_child(argv, pipes, envp);
-		//ft_free_double_pointer((void **)cmd2)
-		//system("leaks pipex");
 		waitpid(pid, &status, 0);
 		waitpid(pid, &status, 0);
-		//exit(EXIT_SUCCESS);
 	}
 	else
 		printf("usage: ./pipex <file1> \"cmd1\" \"cmd2\" <file2>\n");
